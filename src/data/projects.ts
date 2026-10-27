@@ -1,17 +1,48 @@
-import { Project } from "@/types";
+export interface Project {
+  id: string;
+  slug: string;
+  title: string;
+  category: "Analytics" | "Engineering";
+  badge: {
+    text: string;
+    variant: "cyan" | "blue" | "purple" | "emerald";
+  };
+  tools: string[];
+  shortDescription: string;
+  image: string;
+  date: string;
+  metrics: {
+    label: string;
+    value: string;
+    trend?: string;
+  }[];
+  overview: string;
+  problemStatement: string;
+  methodology: string[];
+  keyFindings: string[];
+  businessImpact: string[];
+  codeSnippet?: {
+    language: string;
+    title: string;
+    code: string;
+  };
+  liveUrl?: string;
+  githubUrl?: string;
+}
 
 export const projectsData: Project[] = [
   {
     id: "sales-performance-analysis",
     slug: "sales-performance-analysis",
     title: "Sales Performance Analysis",
+    category: "Analytics",
     badge: {
-      text: "Power BI",
-      variant: "cyan",
+      text: "Analytics",
+      variant: "blue",
     },
     tools: ["Power BI", "SQL"],
     shortDescription:
-      "Analyzed sales data to find revenue trends, profitability, and top-performing products. Built an interactive dashboard with key KPIs and visual insights.",
+      "Analyze sales data to find trends, top products, and performance metrics using Power BI.",
     image: "/images/project_sales.png",
     date: "2025",
     metrics: [
@@ -72,13 +103,14 @@ ORDER BY sales_month DESC, revenue_rank ASC;`,
     id: "exploratory-data-analysis",
     slug: "exploratory-data-analysis",
     title: "Exploratory Data Analysis",
+    category: "Analytics",
     badge: {
-      text: "Python",
+      text: "Analytics",
       variant: "blue",
     },
     tools: ["Python", "Pandas", "Matplotlib"],
     shortDescription:
-      "Cleaned and explored a real-world dataset, handled missing values, and discovered patterns using statistical analysis and visualizations.",
+      "Clean and explore a real-world dataset, handle missing values, and uncover patterns with visualizations.",
     image: "/images/project_eda.png",
     date: "2025",
     metrics: [
@@ -143,9 +175,10 @@ def clean_and_transform_features(df: pd.DataFrame) -> pd.DataFrame:
     id: "hr-analytics-dashboard",
     slug: "hr-analytics-dashboard",
     title: "HR Analytics Dashboard",
+    category: "Analytics",
     badge: {
-      text: "Power BI",
-      variant: "cyan",
+      text: "Analytics",
+      variant: "blue",
     },
     tools: ["Power BI", "Excel"],
     shortDescription:
@@ -200,84 +233,92 @@ RETURN
     githubUrl: "https://github.com/bonssss/hr-analytics-dashboard",
   },
   {
-    id: "customer-behavior-analysis",
-    slug: "customer-behavior-analysis",
-    title: "Customer Behavior Analysis",
+    id: "real-time-clickstream-analytics",
+    slug: "real-time-clickstream-analytics",
+    title: "Real-Time Clickstream Analytics",
+    category: "Engineering",
     badge: {
-      text: "SQL",
-      variant: "purple",
+      text: "Engineering",
+      variant: "emerald",
     },
-    tools: ["SQL", "Python"],
+    tools: ["Kafka", "Spark", "MySQL", "Zeppelin"],
     shortDescription:
-      "Analyzed customer segments, purchase patterns, and retention rates to understand behavior and improve loyalty.",
-    image: "/images/project_customer.png",
-    date: "2024",
+      "Built a real-time data pipeline to process clickstream events and generate insights for user behavior analysis.",
+    image: "/images/project_clickstream.png",
+    date: "2025",
     metrics: [
-      { label: "Active Customers", value: "43,800" },
-      { label: "Champions Segment", value: "14.2%" },
-      { label: "Repeat Purchase Rate", value: "32.8%", trend: "+5.1%" },
-      { label: "Avg Customer LTV", value: "$412.50" },
+      { label: "Event Throughput", value: "25,000 / sec" },
+      { label: "Streaming Latency", value: "< 120 ms" },
+      { label: "Daily Data Volume", value: "85 GB / day" },
+      { label: "Availability SLA", value: "99.95%" },
     ],
     overview:
-      "A comprehensive behavioral clustering and RFM (Recency, Frequency, Monetary) segmentation project. By tracking customer order histories and engagement signals, this analysis uncovers distinct buyer personas to drive targeted marketing retention campaigns.",
+      "An end-to-end distributed real-time data engineering pipeline built to ingest, process, and analyze web clickstream events. The system leverages Apache Kafka for high-throughput event pub/sub, Apache Spark Streaming for real-time windowed aggregations, and MySQL for persisting aggregated analytics queried via Apache Zeppelin.",
     problemStatement:
-      "Marketing acquisition campaigns treated all registered users with identical email sequences, resulting in low conversion rates and high churn among high-value repeat shoppers.",
+      "The product analytics team relied on batch daily jobs to compute user engagement metrics, causing a 24-hour delay in identifying broken checkout funnels and marketing campaign conversion dips.",
     methodology: [
-      "Extracted 3 years of transaction history using SQL queries calculating individual Recency, Frequency, and Monetary scores.",
-      "Assigned percentile-based RFM ratings (1-5 scale) using NTILE analytical window functions.",
-      "Segmented customers into distinct tiers: 'Champions', 'Loyal Customers', 'At Risk', and 'Hibernating'.",
-      "Exported aggregated cohorts to Python for K-Means cluster validation and silhouette score verification.",
+      "Configured multi-broker Apache Kafka cluster with topic partitioning to handle bursty web traffic up to 25k events/sec.",
+      "Developed PySpark Structured Streaming jobs with sliding tumbling windows to calculate real-time session duration and bounce rates.",
+      "Implemented idempotent writes into MySQL to prevent duplicate event ingestion during broker failovers.",
+      "Configured interactive Zeppelin dashboards for real-time visual inspection of live funnels and error rates.",
     ],
     keyFindings: [
-      "The 'Champions' cohort (14.2% of users) accounted for 54% of all profitable repeat sales in the trailing 12 months.",
-      "Customers whose second order was placed within 21 days showed an 82% likelihood of becoming long-term loyalists.",
-      "The 'At Risk' segment represented $180K in potential annual recurring revenue with zero touchpoints in the last 90 days.",
+      "Sub-second event processing reduced conversion drop detection from 24 hours to under 3 minutes.",
+      "Identified that 64% of cart drop-offs occurred during step 2 of payment verification on mobile Safari browsers.",
+      "Kafka consumer group parallelism maintained steady state with under 5% broker CPU utilization.",
     ],
     businessImpact: [
-      "Provided marketing teams with prioritized lists of high-value at-risk accounts for automated re-engagement offers.",
-      "Improved overall email campaign click-through rate by 34% through targeted segmentation rather than blanket blasts.",
+      "Enabled instant alerts for frontend application errors, preventing estimated thousands in lost checkout revenue.",
+      "Established the primary streaming architecture foundation for downstream personalization systems.",
     ],
     codeSnippet: {
-      language: "sql",
-      title: "SQL Query: RFM Segmentation & Cohort Scoring",
-      code: `WITH customer_rfm_raw AS (
-    SELECT 
-        customer_id,
-        MAX(order_date) AS last_order_date,
-        COUNT(DISTINCT order_id) AS total_frequency,
-        SUM(order_total) AS total_monetary,
-        CURRENT_DATE - MAX(order_date) AS recency_days
-    FROM customer_orders
-    WHERE order_status = 'Delivered'
-    GROUP BY customer_id
-),
-rfm_scores AS (
-    SELECT 
-        customer_id,
-        recency_days,
-        total_frequency,
-        total_monetary,
-        NTILE(5) OVER (ORDER BY recency_days DESC) AS r_score,
-        NTILE(5) OVER (ORDER BY total_frequency ASC) AS f_score,
-        NTILE(5) OVER (ORDER BY total_monetary ASC) AS m_score
-    FROM customer_rfm_raw
-)
-SELECT 
-    customer_id,
-    recency_days,
-    total_frequency,
-    total_monetary,
-    r_score, f_score, m_score,
-    CASE 
-        WHEN r_score >= 4 AND (f_score + m_score) >= 8 THEN 'Champions'
-        WHEN r_score >= 3 AND f_score >= 3 THEN 'Loyal Customers'
-        WHEN r_score >= 4 AND f_score = 1 THEN 'Recent New Customers'
-        WHEN r_score <= 2 AND (f_score + m_score) >= 6 THEN 'At Risk Customers'
-        ELSE 'Hibernating / Churned'
-    END AS customer_segment
-FROM rfm_scores;`,
+      language: "python",
+      title: "PySpark Structured Streaming: Kafka Ingestion & Sliding Window Aggregation",
+      code: `from pyspark.sql import SparkSession
+from pyspark.sql.functions import from_json, col, window, count, expr
+from pyspark.sql.types import StructType, StringType, TimestampType
+
+spark = SparkSession.builder \\
+    .appName("ClickstreamStreamingAnalytics") \\
+    .config("spark.sql.shuffle.partitions", "4") \\
+    .getOrCreate()
+
+# Schema definition for clickstream events
+schema = StructType() \\
+    .add("user_id", StringType()) \\
+    .add("session_id", StringType()) \\
+    .add("event_type", StringType()) \\
+    .add("page_url", StringType()) \\
+    .add("timestamp", TimestampType())
+
+# Read streaming events from Kafka
+raw_stream = spark.readStream \\
+    .format("kafka") \\
+    .option("kafka.bootstrap.servers", "localhost:9092") \\
+    .option("subscribe", "web_clickstream") \\
+    .load()
+
+# Parse JSON payload and apply 5-minute tumbling window
+parsed = raw_stream.selectExpr("CAST(value AS STRING) as json_payload") \\
+    .select(from_json(col("json_payload"), schema).alias("data")) \\
+    .select("data.*") \\
+    .withWatermark("timestamp", "10 minutes")
+
+# Windowed aggregation of active sessions and event rates
+windowed_counts = parsed.groupBy(
+    window(col("timestamp"), "5 minutes", "1 minute"),
+    col("event_type")
+).count()
+
+# Stream to MySQL or downstream sink
+query = windowed_counts.writeStream \\
+    .outputMode("update") \\
+    .format("console") \\
+    .start()
+
+query.awaitTermination()`,
     },
-    liveUrl: "https://github.com/bonssss/customer-behavior-analysis#case-study",
-    githubUrl: "https://github.com/bonssss/customer-behavior-analysis",
+    liveUrl: "https://github.com/bonssss/real-time-clickstream-analytics#architecture",
+    githubUrl: "https://github.com/bonssss/real-time-clickstream-analytics",
   },
 ];
