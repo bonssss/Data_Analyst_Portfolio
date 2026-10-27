@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 
 interface DecryptedTextProps {
   text: string;
@@ -22,11 +22,10 @@ export function DecryptedText({
   animateOn = "hover",
 }: DecryptedTextProps) {
   const [displayText, setDisplayText] = useState(text);
-  const [isHovering, setIsHovering] = useState(false);
   const iterationRef = useRef(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const startAnimation = () => {
+  const startAnimation = useCallback(() => {
     iterationRef.current = 0;
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -51,7 +50,7 @@ export function DecryptedText({
         setDisplayText(text);
       }
     }, speed);
-  };
+  }, [characters, maxIterations, speed, text]);
 
   useEffect(() => {
     if (animateOn === "view") {
@@ -60,22 +59,12 @@ export function DecryptedText({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, []);
-
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-    startAnimation();
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-  };
+  }, [animateOn, startAnimation]);
 
   return (
     <span
       className={`inline-block font-mono cursor-default ${className}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={startAnimation}
     >
       {displayText}
     </span>

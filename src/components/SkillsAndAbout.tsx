@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { toolsData, ToolItem } from "@/data/skills";
 import { profileData } from "@/data/profile";
 import { ToolIcon } from "./ToolIcons";
 import { AboutModal } from "./AboutModal";
 import { DataEngineeringGraphic } from "./DataEngineeringGraphic";
-import { MapPin, GraduationCap, TrendingUp, ArrowRight, Info, Check } from "lucide-react";
+import { MapPin, GraduationCap, TrendingUp, ArrowRight } from "lucide-react";
 import { SpotlightCard } from "./reactbits/SpotlightCard";
 
 export function SkillsAndAbout() {

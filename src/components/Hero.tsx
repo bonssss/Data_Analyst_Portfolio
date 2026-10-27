@@ -1,12 +1,10 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { profileData } from "@/data/profile";
 import { HeroDashboard } from "./HeroDashboard";
-import { ArrowRight, Mail, Database, BarChart3, FileSpreadsheet, Code2 } from "lucide-react";
+import { ArrowRight, Mail, Database, BarChart3, FileSpreadsheet, Code2, Workflow } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./SocialIcons";
-import { ShinyText } from "./reactbits/ShinyText";
 
 export function Hero() {
   const getToolIcon = (name: string) => {
@@ -17,6 +15,8 @@ export function Hero() {
         return <Database className="w-3.5 h-3.5 text-sky-600" />;
       case "PostgreSQL":
         return <Database className="w-3.5 h-3.5 text-indigo-500" />;
+      case "ETL Pipelines":
+        return <Workflow className="w-3.5 h-3.5 text-teal-500" />;
       case "Power BI":
         return <BarChart3 className="w-3.5 h-3.5 text-amber-500" />;
       case "Excel":

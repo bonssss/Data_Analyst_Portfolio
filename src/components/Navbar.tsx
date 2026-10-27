@@ -3,8 +3,16 @@
 import React, { useState, useEffect } from "react";
 import { MonogramLogo } from "./MonogramLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { Download, Menu, X, ArrowUpRight } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 import { profileData } from "@/data/profile";
+
+const navLinks = [
+  { name: "Home", href: "#hero", id: "hero" },
+  { name: "Projects", href: "#projects", id: "projects" },
+  { name: "Skills", href: "#skills", id: "skills" },
+  { name: "About", href: "#about", id: "about" },
+  { name: "Contact", href: "#contact", id: "contact" },
+];
 
 interface NavbarProps {
   onOpenResume?: () => void;
@@ -15,19 +23,10 @@ export function Navbar({ onOpenResume }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { name: "Home", href: "#hero", id: "hero" },
-    { name: "Projects", href: "#projects", id: "projects" },
-    { name: "Skills", href: "#skills", id: "skills" },
-    { name: "About", href: "#about", id: "about" },
-    { name: "Contact", href: "#contact", id: "contact" },
-  ];
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      // Determine active section
       const sections = navLinks.map((l) => l.id);
       const scrollPos = window.scrollY + 200;
 
@@ -88,7 +87,7 @@ export function Navbar({ onOpenResume }: NavbarProps) {
             <a
               href={profileData.cvUrl}
               download="Bonsa_Desalegn_Data_Analyst_CV.pdf"
-              onClick={(e) => {
+              onClick={() => {
                 if (onOpenResume) {
                   // If resume modal handler provided, allow quick preview option or standard download
                 }

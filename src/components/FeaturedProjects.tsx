@@ -5,7 +5,7 @@ import Image from "next/image";
 import { projectsData } from "@/data/projects";
 import { Project } from "@/types";
 import { ProjectModal } from "./ProjectModal";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SpotlightCard } from "./reactbits/SpotlightCard";
 
 export function FeaturedProjects() {
@@ -77,7 +77,7 @@ export function FeaturedProjects() {
 
         {/* 4-Project Grid matching the mockup */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProjects.map((project, idx) => (
+          {filteredProjects.map((project) => (
             <SpotlightCard
               key={project.id}
               className="group flex flex-col justify-between h-full bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"

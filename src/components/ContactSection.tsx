@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { profileData } from "@/data/profile";
-import { Mail, MapPin, Send, ArrowRight, CheckCircle2, Sparkles, X } from "lucide-react";
+import { Mail, MapPin, Send, ArrowRight, CheckCircle2, X } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./SocialIcons";
 import confetti from "canvas-confetti";
 
@@ -33,7 +33,7 @@ export function ContactSection() {
           origin: { y: 0.6 },
           colors: ["#0284c7", "#0d9488", "#38bdf8", "#10b981"],
         });
-      } catch (err) {
+      } catch {
         // Safe fallback
       }
     }, 600);

@@ -7,12 +7,12 @@ export const profileData = {
     "I design reliable data pipelines and transform complex data into actionable insights. Combining software engineering rigor with modern analytics to build resilient data architectures and decision-ready dashboards.",
   aboutGreeting: "Hi, I'm Bonsa Desalegn",
   aboutIntro:
-    "I'm a Data Analyst and Data Engineer with a solid Software Engineering foundation from Arba Minch University. I bridge the gap between backend data pipelines and executive business intelligence.",
+    "I'm a Data Analyst and Data Engineer with a solid Software Engineering foundation. I bridge the gap between backend data pipelines and executive business intelligence.",
   aboutExtended:
-    "With a background in Software Engineering from Arba Minch University, I bring deep system design and algorithmic discipline to the data ecosystem. From architecting normalized schemas, optimizing complex SQL queries, and automating Python ETL workflows, to delivering intuitive Power BI dashboards with DAX measures, I work across the full lifecycle of data — from ingestion to impact.",
+    "With a background in Software Engineering, I bring deep system design and algorithmic discipline to the data ecosystem. From architecting normalized schemas, optimizing complex SQL queries, and automating Python ETL workflows, to delivering intuitive Power BI dashboards with DAX measures, I work across the full lifecycle of data — from ingestion to impact.",
   avatar: "/images/bonsa_portrait.png",
   location: "Addis Ababa, Ethiopia",
-  education: "BSc in Software Engineering (Arba Minch University)",
+  education: "BSc in Software Engineering",
   status: "Building Scalable Data Pipelines & BI Dashboards",
   cvUrl: "/documents/Bonsa_Desalegn_CV.pdf",
   socials: {
@@ -36,6 +36,7 @@ export const profileData = {
     { name: "Python", icon: "python", color: "#3776ab" },
     { name: "SQL", icon: "sql", color: "#00758f" },
     { name: "PostgreSQL", icon: "postgresql", color: "#336791" },
+    { name: "ETL Pipelines", icon: "workflow", color: "#0d9488" },
     { name: "Power BI", icon: "powerbi", color: "#f2c811" },
     { name: "Excel", icon: "excel", color: "#217346" },
   ],
