@@ -2,558 +2,374 @@
 
 import React, { useState } from "react";
 import {
-  TrendingUp,
-  BarChart2,
+  FileText,
   Database,
-  Cpu,
-  Layers,
-  Workflow,
-  SlidersHorizontal,
-  Maximize2,
-  CheckCircle2,
-  Zap,
+  Radio,
 } from "lucide-react";
-import { AnimatedCounter } from "./reactbits/AnimatedCounter";
+import { ToolIcon } from "./ToolIcons";
 
 export function HeroDashboard() {
-  const [activeTab, setActiveTab] = useState<"pipeline" | "analytics">("analytics");
-  const [activeMonthIndex, setActiveMonthIndex] = useState<number>(9); // Default to Oct
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const [activePipelineStage, setActivePipelineStage] = useState<number>(1);
+  const [activeNode, setActiveNode] = useState<number | null>(null);
 
-  const months = [
-    { name: "Jan", revenue: 68 },
-    { name: "Feb", revenue: 74 },
-    { name: "Mar", revenue: 82 },
-    { name: "Apr", revenue: 95 },
-    { name: "May", revenue: 88 },
-    { name: "Jun", revenue: 104 },
-    { name: "Jul", revenue: 112 },
-    { name: "Aug", revenue: 108 },
-    { name: "Sep", revenue: 118 },
-    { name: "Oct", revenue: 125 },
-    { name: "Nov", revenue: 132 },
-    { name: "Dec", revenue: 145 },
-  ];
-
-  const categories = [
-    { name: "Electronics", percent: 29, color: "#0284c7" },
-    { name: "Clothing", percent: 24, color: "#06b6d4" },
-    { name: "Home & Living", percent: 18, color: "#14b8a6" },
-    { name: "Beauty", percent: 17, color: "#f59e0b" },
-    { name: "Sports", percent: 12, color: "#6366f1" },
-  ];
-
-  const pipelineStages = [
+  const nodes = [
     {
-      title: "1. Data Ingestion",
-      tech: "PostgreSQL &bull; APIs",
-      stat: "24.8k events/s",
-      desc: "Automated CDC extraction from relational DBs & REST webhooks",
+      id: "sources",
+      step: "01",
+      title: "Sources",
+      bgColor: "bg-white dark:bg-slate-900",
+      borderColor: "border-slate-200 dark:border-slate-800",
+      activeRing: "ring-2 ring-sky-400/80 border-sky-400 dark:border-sky-500",
+      items: [
+        { label: "Files", icon: <FileText className="w-3.5 h-3.5 text-sky-500" /> },
+        { label: "Databases", icon: <Database className="w-3.5 h-3.5 text-indigo-500" /> },
+        { label: "Streams", icon: <Radio className="w-3.5 h-3.5 text-teal-500" /> },
+      ],
+      detail: "CSV, Parquet, REST APIs, & OLTP DBs",
+      metric: "Multi-Source Feed",
     },
     {
-      title: "2. ETL Pipeline",
-      tech: "Python &bull; Pandas",
-      stat: "Schema validated",
-      desc: "Automated cleaning, missingness imputation & deduplication",
+      id: "ingestion",
+      step: "02",
+      title: "Ingestion",
+      bgColor: "bg-emerald-50/70 dark:bg-emerald-950/40",
+      borderColor: "border-emerald-200/80 dark:border-emerald-800/60",
+      activeRing: "ring-2 ring-emerald-400/80 border-emerald-400 dark:border-emerald-500",
+      icon: <ToolIcon name="kafka" className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />,
+      primaryText: "Kafka",
+      secondaryText: "Streaming Events",
+      detail: "High-throughput partitioned event broker",
+      metric: "25k events/sec",
     },
     {
-      title: "3. Star Schema Warehouse",
-      tech: "PostgreSQL &bull; dbt",
-      stat: "Fact & Dim Tables",
-      desc: "Optimized dimensional modeling for low-latency BI aggregations",
+      id: "processing",
+      step: "03",
+      title: "Processing",
+      bgColor: "bg-sky-50/70 dark:bg-sky-950/40",
+      borderColor: "border-sky-200/80 dark:border-sky-800/60",
+      activeRing: "ring-2 ring-sky-400/80 border-sky-400 dark:border-sky-500",
+      dualIcons: [
+        <ToolIcon key="python" name="python" className="w-6 h-6" />,
+        <ToolIcon key="spark" name="spark" className="w-6 h-6" />,
+      ],
+      primaryText: "Python • Spark",
+      subBullets: ["Transform", "Clean", "Enrich"],
+      detail: "PySpark structured streaming & windowed transforms",
+      metric: "< 120ms Latency",
+    },
+    {
+      id: "storage",
+      step: "04",
+      title: "Storage",
+      bgColor: "bg-indigo-50/60 dark:bg-indigo-950/40",
+      borderColor: "border-indigo-200/80 dark:border-indigo-800/60",
+      activeRing: "ring-2 ring-indigo-400/80 border-indigo-400 dark:border-indigo-500",
+      icon: <ToolIcon name="postgresql" className="w-7 h-7" />,
+      primaryText: "PostgreSQL",
+      secondaryText: "Data Lake / Warehouse",
+      detail: "Star schema with dimension & fact tables",
+      metric: "99.98% Integrity",
+    },
+    {
+      id: "insights",
+      step: "05",
+      title: "Insights",
+      bgColor: "bg-amber-50/70 dark:bg-amber-950/40",
+      borderColor: "border-amber-200/80 dark:border-amber-800/60",
+      activeRing: "ring-2 ring-amber-400/80 border-amber-400 dark:border-amber-500",
+      icon: <ToolIcon name="powerbi" className="w-7 h-7" />,
+      primaryText: "Power BI",
+      secondaryText: "Dashboards • Reports",
+      detail: "DAX KPIs, interactive drilldowns & executive summaries",
+      metric: "Daily Live Sync",
     },
   ];
-
-  // SVG coordinates calculation for line chart
-  const width = 280;
-  const height = 110;
-  const paddingX = 15;
-  const paddingY = 15;
-
-  const getCoordinates = (index: number, val: number) => {
-    const x = paddingX + (index / (months.length - 1)) * (width - 2 * paddingX);
-    const minVal = 50;
-    const maxVal = 150;
-    const y = height - paddingY - ((val - minVal) / (maxVal - minVal)) * (height - 2 * paddingY);
-    return { x, y };
-  };
-
-  const points = months.map((m, idx) => getCoordinates(idx, m.revenue));
-  const linePath = points.reduce(
-    (acc, pt, idx) => (idx === 0 ? `M ${pt.x} ${pt.y}` : `${acc} L ${pt.x} ${pt.y}`),
-    ""
-  );
-  const areaPath = `${linePath} L ${points[points.length - 1].x} ${height - 5} L ${points[0].x} ${height - 5} Z`;
 
   return (
-    <div className="relative w-full max-w-[580px] mx-auto select-none">
-      {/* Decorative Potted Plant on Left (matching mockup) */}
-      <div className="absolute -left-10 md:-left-16 bottom-10 z-20 pointer-events-none drop-shadow-md">
-        <svg
-          className="w-20 md:w-28 h-auto overflow-visible animate-float"
-          viewBox="0 0 100 130"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Leaves */}
-          <path d="M 50 85 C 20 60 10 20 35 10 C 50 30 52 60 50 85 Z" fill="url(#leafGrad1)" />
-          <path d="M 50 85 C 70 55 90 25 70 12 C 55 25 52 65 50 85 Z" fill="url(#leafGrad2)" />
-          <path d="M 50 85 C 40 40 45 10 60 5 C 65 25 58 60 50 85 Z" fill="url(#leafGrad3)" />
-          <path d="M 50 85 C 10 70 5 45 20 40 C 35 50 45 70 50 85 Z" fill="url(#leafGrad1)" />
-          {/* Ceramic Pot */}
-          <ellipse cx="50" cy="85" rx="20" ry="4" fill="#cbd5e1" />
-          <path d="M 32 85 L 36 122 C 36 126 64 126 64 122 L 68 85 Z" fill="url(#potGrad)" />
-          <ellipse cx="50" cy="122" rx="14" ry="2.5" fill="#94a3b8" />
-
-          <defs>
-            <linearGradient id="leafGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#047857" />
-            </linearGradient>
-            <linearGradient id="leafGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#34d399" />
-              <stop offset="100%" stopColor="#059669" />
-            </linearGradient>
-            <linearGradient id="leafGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#6ee7b7" />
-              <stop offset="100%" stopColor="#047857" />
-            </linearGradient>
-            <linearGradient id="potGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#e2e8f0" />
-              <stop offset="50%" stopColor="#ffffff" />
-              <stop offset="100%" stopColor="#cbd5e1" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-
-      {/* Laptop Device Frame */}
-      <div className="relative z-10">
-        {/* Screen Bezel */}
-        <div className="relative rounded-t-2xl p-2.5 sm:p-3 bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl border-t border-x border-slate-700/80">
-          {/* Top Notch / Web camera dot */}
-          <div className="absolute top-1.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-950 border border-slate-700" />
+    <div className="relative w-full max-w-[680px] mx-auto select-none py-2">
+      {/* 
+        ========================================================================
+        TOP HANDWRITTEN ANNOTATION: Data → Pipelines → Insights
+        ========================================================================
+      */}
+      <div className="flex justify-end pr-3 sm:pr-8 mb-3">
+        <div className="relative inline-flex flex-col items-end">
+          <div className="flex items-center gap-1.5 font-handwriting text-xl sm:text-2xl font-bold tracking-wide text-teal-600 dark:text-teal-400 rotate-[-1.5deg]">
+            <span>Data</span>
+            <span className="text-teal-500">&rarr;</span>
+            <span>Pipelines</span>
+            <span className="text-teal-500">&rarr;</span>
+            <span>Insights</span>
           </div>
-
-          {/* Inner Dashboard Display */}
-          <div className="relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-inner">
-            {/* Dashboard App Top Bar with Dual Switch: Analytics & Data Pipeline */}
-            <div className="flex items-center justify-between px-3.5 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80">
-              {/* Dual Tab Mode Switcher */}
-              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-slate-200/70 dark:bg-slate-800">
-                <button
-                  onClick={() => setActiveTab("analytics")}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
-                    activeTab === "analytics"
-                      ? "bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-2xs"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                  }`}
-                >
-                  <BarChart2 className="w-3 h-3" />
-                  <span>Analytics BI</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab("pipeline")}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
-                    activeTab === "pipeline"
-                      ? "bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-2xs"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                  }`}
-                >
-                  <Workflow className="w-3 h-3 text-teal-500" />
-                  <span>Data Pipeline (ETL)</span>
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2 text-slate-400">
-                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Live Stream
-                </span>
-                <SlidersHorizontal className="w-3 h-3 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" />
-                <Maximize2 className="w-3 h-3 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" />
-              </div>
-            </div>
-
-            {/* View 1: Analytics Overview (matching design mockup) */}
-            {activeTab === "analytics" && (
-              <div className="p-3 sm:p-4 space-y-3 animate-in fade-in-50 duration-200">
-                {/* Top 3 KPI Cards */}
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                      Total Revenue
-                    </span>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                      <AnimatedCounter value="$125,430" />
-                    </div>
-                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                      <TrendingUp className="w-2.5 h-2.5" />
-                      <span>+12.5%</span>
-                    </div>
-                  </div>
-
-                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                      Total Orders
-                    </span>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                      <AnimatedCounter value="2,842" />
-                    </div>
-                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                      <TrendingUp className="w-2.5 h-2.5" />
-                      <span>+8.3%</span>
-                    </div>
-                  </div>
-
-                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                      Profit Margin
-                    </span>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                      <AnimatedCounter value="18.6%" />
-                    </div>
-                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                      <TrendingUp className="w-2.5 h-2.5" />
-                      <span>+4.2%</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom Row: Line Chart + Donut Chart */}
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-1">
-                  {/* Monthly Revenue Line Chart */}
-                  <div className="sm:col-span-3 p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
-                        Monthly Revenue
-                      </span>
-                      <span className="text-[9px] font-mono font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/80 px-1.5 py-0.5 rounded">
-                        {months[activeMonthIndex].name}: ${months[activeMonthIndex].revenue}k
-                      </span>
-                    </div>
-
-                    <div className="relative">
-                      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-24 overflow-visible">
-                        <defs>
-                          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#0284c7" stopOpacity="0.28" />
-                            <stop offset="100%" stopColor="#0284c7" stopOpacity="0.0" />
-                          </linearGradient>
-                        </defs>
-
-                        {[30, 60, 90].map((y, idx) => (
-                          <line
-                            key={idx}
-                            x1="10"
-                            y1={y}
-                            x2={width - 10}
-                            y2={y}
-                            stroke="currentColor"
-                            className="text-slate-200 dark:text-slate-800"
-                            strokeDasharray="2 2"
-                          />
-                        ))}
-
-                        <path d={areaPath} fill="url(#revenueGradient)" />
-                        <path
-                          d={linePath}
-                          fill="none"
-                          stroke="#0284c7"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-
-                        {points.map((pt, idx) => {
-                          const isCurrent = activeMonthIndex === idx;
-                          return (
-                            <g
-                              key={idx}
-                              onMouseEnter={() => setActiveMonthIndex(idx)}
-                              className="cursor-pointer"
-                            >
-                              <circle
-                                cx={pt.x}
-                                cy={pt.y}
-                                r={isCurrent ? 4.5 : 2.5}
-                                className={`transition-all duration-150 ${
-                                  isCurrent
-                                    ? "fill-sky-500 stroke-white dark:stroke-slate-900 stroke-2"
-                                    : "fill-white dark:fill-slate-900 stroke-sky-500 stroke-1.5"
-                                }`}
-                              />
-                            </g>
-                          );
-                        })}
-                      </svg>
-
-                      <div className="flex justify-between text-[8px] font-mono text-slate-400 mt-1 px-1">
-                        {months.map((m, idx) => (
-                          <span
-                            key={idx}
-                            onClick={() => setActiveMonthIndex(idx)}
-                            className={`cursor-pointer transition-colors ${
-                              activeMonthIndex === idx
-                                ? "text-sky-600 dark:text-sky-400 font-bold"
-                                : "hover:text-slate-600 dark:hover:text-slate-300"
-                            }`}
-                          >
-                            {m.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Donut Chart */}
-                  <div className="sm:col-span-2 p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 flex flex-col justify-between">
-                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
-                      Sales by Category
-                    </span>
-
-                    <div className="flex items-center gap-2 my-auto">
-                      <div className="relative w-16 h-16 shrink-0">
-                        <svg viewBox="0 0 40 40" className="w-full h-full -rotate-90">
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="15.915"
-                            fill="transparent"
-                            stroke="#0284c7"
-                            strokeWidth="6"
-                            strokeDasharray="29 71"
-                            strokeDashoffset="0"
-                            className="transition-opacity hover:opacity-80 cursor-pointer"
-                            onMouseEnter={() => setHoveredCategory("Electronics")}
-                            onMouseLeave={() => setHoveredCategory(null)}
-                          />
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="15.915"
-                            fill="transparent"
-                            stroke="#06b6d4"
-                            strokeWidth="6"
-                            strokeDasharray="24 76"
-                            strokeDashoffset="-29"
-                            className="transition-opacity hover:opacity-80 cursor-pointer"
-                            onMouseEnter={() => setHoveredCategory("Clothing")}
-                            onMouseLeave={() => setHoveredCategory(null)}
-                          />
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="15.915"
-                            fill="transparent"
-                            stroke="#14b8a6"
-                            strokeWidth="6"
-                            strokeDasharray="18 82"
-                            strokeDashoffset="-53"
-                            className="transition-opacity hover:opacity-80 cursor-pointer"
-                            onMouseEnter={() => setHoveredCategory("Home & Living")}
-                            onMouseLeave={() => setHoveredCategory(null)}
-                          />
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="15.915"
-                            fill="transparent"
-                            stroke="#f59e0b"
-                            strokeWidth="6"
-                            strokeDasharray="17 83"
-                            strokeDashoffset="-71"
-                            className="transition-opacity hover:opacity-80 cursor-pointer"
-                            onMouseEnter={() => setHoveredCategory("Beauty")}
-                            onMouseLeave={() => setHoveredCategory(null)}
-                          />
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="15.915"
-                            fill="transparent"
-                            stroke="#6366f1"
-                            strokeWidth="6"
-                            strokeDasharray="12 88"
-                            strokeDashoffset="-88"
-                            className="transition-opacity hover:opacity-80 cursor-pointer"
-                            onMouseEnter={() => setHoveredCategory("Sports")}
-                            onMouseLeave={() => setHoveredCategory(null)}
-                          />
-                        </svg>
-                      </div>
-
-                      <div className="flex flex-col gap-0.5 text-[9px] w-full">
-                        {categories.map((c) => (
-                          <div
-                            key={c.name}
-                            className={`flex items-center justify-between transition-colors ${
-                              hoveredCategory === c.name
-                                ? "font-bold text-sky-600"
-                                : "text-slate-600 dark:text-slate-400"
-                            }`}
-                          >
-                            <div className="flex items-center gap-1 truncate">
-                              <span
-                                className="w-1.5 h-1.5 rounded-full shrink-0"
-                                style={{ backgroundColor: c.color }}
-                              />
-                              <span className="truncate">{c.name}</span>
-                            </div>
-                            <span className="font-mono text-slate-700 dark:text-slate-300 ml-1">
-                              {c.percent}%
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* View 2: Data Pipeline & Data Engineering Architecture */}
-            {activeTab === "pipeline" && (
-              <div className="p-3 sm:p-4 space-y-3 animate-in fade-in-50 duration-200">
-                {/* Data Pipeline KPI Cards */}
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                      Daily Throughput
-                    </span>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                      <AnimatedCounter value="1.2M rows" />
-                    </div>
-                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                      <Zap className="w-2.5 h-2.5" />
-                      <span>Active DAG</span>
-                    </div>
-                  </div>
-
-                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                      Query Latency
-                    </span>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                      <AnimatedCounter value="42ms" />
-                    </div>
-                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-teal-600 dark:text-teal-400 mt-0.5">
-                      <span>Indexed &bull; CTE</span>
-                    </div>
-                  </div>
-
-                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                      Pipeline Reliability
-                    </span>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                      <AnimatedCounter value="99.98%" />
-                    </div>
-                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                      <CheckCircle2 className="w-2.5 h-2.5" />
-                      <span>Zero Loss</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Pipeline Flowchart Visual */}
-                <div className="p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
-                      End-to-End Data Pipeline Flow
-                    </span>
-                    <span className="text-[9px] font-mono text-teal-600 dark:text-teal-400">
-                      Automated &bull; Airflow &bull; Python
-                    </span>
-                  </div>
-
-                  {/* 3 Step Pipeline Nodes */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {pipelineStages.map((stage, idx) => {
-                      const isActive = activePipelineStage === idx;
-                      return (
-                        <div
-                          key={idx}
-                          onClick={() => setActivePipelineStage(idx)}
-                          className={`p-2 rounded-lg border cursor-pointer transition-all ${
-                            isActive
-                              ? "bg-teal-50 dark:bg-teal-950/70 border-teal-400 shadow-2xs"
-                              : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] font-bold text-slate-900 dark:text-white">
-                              {stage.title}
-                            </span>
-                            {idx === 0 ? (
-                              <Database className="w-3 h-3 text-sky-500" />
-                            ) : idx === 1 ? (
-                              <Cpu className="w-3 h-3 text-teal-500" />
-                            ) : (
-                              <Layers className="w-3 h-3 text-indigo-500" />
-                            )}
-                          </div>
-                          <span
-                            className="block text-[8px] font-mono text-teal-700 dark:text-teal-300 font-semibold"
-                            dangerouslySetInnerHTML={{ __html: stage.tech }}
-                          />
-                          <p className="text-[8px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                            {stage.desc}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Connecting Stream Bar */}
-                  <div className="relative h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
-                    <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-sky-500 via-teal-400 to-emerald-400 rounded-full animate-pulse" />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Laptop Keyboard Base & Hinge */}
-        <div className="relative">
-          <div className="h-3 sm:h-3.5 bg-gradient-to-b from-slate-300 via-slate-400 to-slate-500 dark:from-slate-700 dark:via-slate-800 dark:to-slate-900 rounded-b-xl shadow-xl flex items-center justify-center">
-            <div className="w-16 h-1 rounded-b bg-slate-400/80 dark:bg-slate-700" />
-          </div>
-          <div className="w-[96%] mx-auto h-2 bg-slate-400/30 dark:bg-slate-950/60 blur-xs rounded-full" />
-        </div>
-      </div>
-
-      {/* Handwritten Annotation Underneath: "Data Engineering → Insights → Impact" */}
-      <div className="mt-4 sm:mt-5 flex flex-col items-center sm:items-end sm:pr-8">
-        <div className="relative inline-flex flex-col items-center">
-          <span className="font-handwriting text-xl sm:text-2xl font-bold tracking-wide text-teal-600 dark:text-teal-400 rotate-[-2deg]">
-            Data Pipelines → Insights → Impact
-          </span>
+          {/* Handwritten curved underline SVG */}
           <svg
-            className="w-40 sm:w-48 h-6 text-teal-500/80 dark:text-teal-400/80 -mt-1 overflow-visible"
-            viewBox="0 0 160 20"
+            className="w-48 sm:w-56 h-4 text-teal-500/80 dark:text-teal-400/80 -mt-1 pointer-events-none"
+            viewBox="0 0 180 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M 5 6 C 45 14 110 16 148 7"
+              d="M 4 4 C 40 12 120 14 168 6"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.2"
               strokeLinecap="round"
             />
             <path
-              d="M 140 3 L 152 7 L 143 12"
+              d="M 160 2 L 172 6 L 162 10"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
         </div>
+      </div>
+
+      {/* 
+        ========================================================================
+        MAIN 5-CARD PIPELINE FLOW CONTAINER (STABLE HEIGHT - ZERO FLICKER)
+        ========================================================================
+      */}
+      <div className="relative p-4 sm:p-6 rounded-3xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/90 dark:border-slate-800 shadow-xl backdrop-blur-md">
+        {/* Subtle decorative background flow line connecting the cards */}
+        <div className="hidden sm:block absolute top-[52%] left-10 right-10 h-0.5 border-t-2 border-dashed border-sky-300/50 dark:border-sky-700/40 pointer-events-none -z-0" />
+
+        {/* Animated pulse dots traveling along the flow */}
+        <div className="hidden sm:block absolute top-[52%] left-10 right-10 -translate-y-1/2 pointer-events-none -z-0">
+          <div className="w-2.5 h-2.5 rounded-full bg-teal-400 blur-[1px] animate-pulse absolute left-1/4" />
+          <div className="w-2.5 h-2.5 rounded-full bg-sky-400 blur-[1px] animate-pulse absolute left-2/4" />
+          <div className="w-2.5 h-2.5 rounded-full bg-amber-400 blur-[1px] animate-pulse absolute left-3/4" />
+        </div>
+
+        {/* 5 Connected Node Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 relative z-10 items-stretch">
+          {/* Card 1: Sources */}
+          <div
+            onMouseEnter={() => setActiveNode(0)}
+            onMouseLeave={() => setActiveNode(null)}
+            className={`group relative flex flex-col justify-between p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+              nodes[0].bgColor
+            } ${
+              activeNode === 0
+                ? `${nodes[0].activeRing} shadow-md`
+                : `${nodes[0].borderColor} shadow-2xs hover:shadow-xs hover:border-slate-300 dark:hover:border-slate-700`
+            }`}
+          >
+            <div>
+              <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-2.5 pb-1 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between pointer-events-none">
+                <span>{nodes[0].title}</span>
+                <span className="text-[9px] font-mono text-slate-400">01</span>
+              </div>
+              <div className="space-y-1.5 pointer-events-none">
+                {nodes[0].items?.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-1.5 p-1 rounded-md bg-slate-50 dark:bg-slate-800/50 text-[10.5px] font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    {item.icon}
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-2.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 text-[9px] font-mono text-slate-400 text-center truncate pointer-events-none">
+              {nodes[0].metric}
+            </div>
+
+            {/* Connecting arrow pointing to next card (visible on desktop) */}
+            <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 items-center justify-center text-slate-400 text-[10px] pointer-events-none select-none shadow-2xs">
+              &rarr;
+            </div>
+          </div>
+
+          {/* Card 2: Ingestion */}
+          <div
+            onMouseEnter={() => setActiveNode(1)}
+            onMouseLeave={() => setActiveNode(null)}
+            className={`group relative flex flex-col justify-between p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+              nodes[1].bgColor
+            } ${
+              activeNode === 1
+                ? `${nodes[1].activeRing} shadow-md`
+                : `${nodes[1].borderColor} shadow-2xs hover:shadow-xs hover:border-emerald-300 dark:hover:border-emerald-700`
+            }`}
+          >
+            <div>
+              <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-2 pb-1 border-b border-emerald-100 dark:border-emerald-900/40 flex items-center justify-between pointer-events-none">
+                <span>{nodes[1].title}</span>
+                <span className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400">02</span>
+              </div>
+
+              <div className="flex flex-col items-center justify-center py-2 space-y-1.5 text-center pointer-events-none">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-900 shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                  {nodes[1].icon}
+                </div>
+                <div className="text-xs font-extrabold text-slate-900 dark:text-white">
+                  {nodes[1].primaryText}
+                </div>
+                <div className="text-[9.5px] font-medium text-emerald-700 dark:text-emerald-300 leading-tight">
+                  {nodes[1].secondaryText}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-1 pt-1.5 border-t border-emerald-200/50 dark:border-emerald-800/40 text-[9px] font-mono text-emerald-700 dark:text-emerald-300 text-center font-semibold pointer-events-none">
+              {nodes[1].metric}
+            </div>
+
+            {/* Connecting arrow pointing to next card */}
+            <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 items-center justify-center text-slate-400 text-[10px] pointer-events-none select-none shadow-2xs">
+              &rarr;
+            </div>
+          </div>
+
+          {/* Card 3: Processing */}
+          <div
+            onMouseEnter={() => setActiveNode(2)}
+            onMouseLeave={() => setActiveNode(null)}
+            className={`group relative flex flex-col justify-between p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+              nodes[2].bgColor
+            } ${
+              activeNode === 2
+                ? `${nodes[2].activeRing} shadow-md`
+                : `${nodes[2].borderColor} shadow-2xs hover:shadow-xs hover:border-sky-300 dark:hover:border-sky-700`
+            }`}
+          >
+            <div>
+              <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-2 pb-1 border-b border-sky-100 dark:border-sky-900/40 flex items-center justify-between pointer-events-none">
+                <span>{nodes[2].title}</span>
+                <span className="text-[9px] font-mono text-sky-600 dark:text-sky-400">03</span>
+              </div>
+
+              <div className="flex flex-col items-center justify-center py-1.5 space-y-1 text-center pointer-events-none">
+                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                  {nodes[2].dualIcons}
+                </div>
+                <div className="text-xs font-extrabold text-slate-900 dark:text-white">
+                  {nodes[2].primaryText}
+                </div>
+                <div className="flex flex-wrap justify-center gap-0.5 text-[8.5px] font-medium text-sky-700 dark:text-sky-300">
+                  <span>Transform</span>
+                  <span>•</span>
+                  <span>Clean</span>
+                  <span>•</span>
+                  <span>Enrich</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-1 pt-1.5 border-t border-sky-200/50 dark:border-sky-800/40 text-[9px] font-mono text-sky-700 dark:text-sky-300 text-center font-semibold pointer-events-none">
+              {nodes[2].metric}
+            </div>
+
+            {/* Connecting arrow pointing to next card */}
+            <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 items-center justify-center text-slate-400 text-[10px] pointer-events-none select-none shadow-2xs">
+              &rarr;
+            </div>
+          </div>
+
+          {/* Card 4: Storage */}
+          <div
+            onMouseEnter={() => setActiveNode(3)}
+            onMouseLeave={() => setActiveNode(null)}
+            className={`group relative flex flex-col justify-between p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+              nodes[3].bgColor
+            } ${
+              activeNode === 3
+                ? `${nodes[3].activeRing} shadow-md`
+                : `${nodes[3].borderColor} shadow-2xs hover:shadow-xs hover:border-indigo-300 dark:hover:border-indigo-700`
+            }`}
+          >
+            <div>
+              <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-2 pb-1 border-b border-indigo-100 dark:border-indigo-900/40 flex items-center justify-between pointer-events-none">
+                <span>{nodes[3].title}</span>
+                <span className="text-[9px] font-mono text-indigo-600 dark:text-indigo-400">04</span>
+              </div>
+
+              <div className="flex flex-col items-center justify-center py-2 space-y-1.5 text-center pointer-events-none">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-900 shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                  {nodes[3].icon}
+                </div>
+                <div className="text-xs font-extrabold text-slate-900 dark:text-white">
+                  {nodes[3].primaryText}
+                </div>
+                <div className="text-[9.5px] font-medium text-indigo-700 dark:text-indigo-300 leading-tight">
+                  {nodes[3].secondaryText}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-1 pt-1.5 border-t border-indigo-200/50 dark:border-indigo-800/40 text-[9px] font-mono text-indigo-700 dark:text-indigo-300 text-center font-semibold pointer-events-none">
+              {nodes[3].metric}
+            </div>
+
+            {/* Connecting arrow pointing to next card */}
+            <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 items-center justify-center text-slate-400 text-[10px] pointer-events-none select-none shadow-2xs">
+              &rarr;
+            </div>
+          </div>
+
+          {/* Card 5: Insights */}
+          <div
+            onMouseEnter={() => setActiveNode(4)}
+            onMouseLeave={() => setActiveNode(null)}
+            className={`group relative flex flex-col justify-between p-3 rounded-2xl border transition-all duration-200 cursor-pointer col-span-2 sm:col-span-1 ${
+              nodes[4].bgColor
+            } ${
+              activeNode === 4
+                ? `${nodes[4].activeRing} shadow-md`
+                : `${nodes[4].borderColor} shadow-2xs hover:shadow-xs hover:border-amber-300 dark:hover:border-amber-700`
+            }`}
+          >
+            <div>
+              <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-2 pb-1 border-b border-amber-100 dark:border-amber-900/40 flex items-center justify-between pointer-events-none">
+                <span>{nodes[4].title}</span>
+                <span className="text-[9px] font-mono text-amber-600 dark:text-amber-400">05</span>
+              </div>
+
+              <div className="flex flex-col items-center justify-center py-2 space-y-1.5 text-center pointer-events-none">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-900 shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                  {nodes[4].icon}
+                </div>
+                <div className="text-xs font-extrabold text-slate-900 dark:text-white">
+                  {nodes[4].primaryText}
+                </div>
+                <div className="text-[9.5px] font-medium text-amber-700 dark:text-amber-300 leading-tight">
+                  {nodes[4].secondaryText}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-1 pt-1.5 border-t border-amber-200/50 dark:border-amber-800/40 text-[9px] font-mono text-amber-700 dark:text-amber-300 text-center font-semibold pointer-events-none">
+              {nodes[4].metric}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 
+        ========================================================================
+        BOTTOM STATUS STRIP (FIXED HEIGHT TO PREVENT ANY JUMP OR FLICKER)
+        ========================================================================
+      */}
+      <div className="mt-4 h-9 flex items-center justify-center">
+        {activeNode !== null ? (
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-900 text-white dark:bg-slate-800 text-xs font-medium shadow-sm transition-all duration-200 animate-in fade-in-50">
+            <span className="w-2 h-2 rounded-full bg-teal-400 animate-ping" />
+            <span className="font-bold text-teal-300">{nodes[activeNode].title}:</span>
+            <span className="text-slate-200">{nodes[activeNode].detail}</span>
+            <span className="font-mono text-[10px] text-teal-400 font-bold bg-slate-950 px-2 py-0.5 rounded ml-1">
+              {nodes[activeNode].metric}
+            </span>
+          </div>
+        ) : (
+          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-[10px] sm:text-xs font-mono font-bold tracking-[0.25em] text-slate-500 dark:text-slate-400 uppercase transition-all duration-200">
+            <span>INGEST</span>
+            <span className="text-sky-500">&rarr;</span>
+            <span>TRANSFORM</span>
+            <span className="text-teal-500">&rarr;</span>
+            <span>ANALYZE</span>
+          </div>
+        )}
       </div>
     </div>
   );

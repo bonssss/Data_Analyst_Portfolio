@@ -111,6 +111,85 @@ export function ToolIcon({ name, className = "w-5 h-5" }: { name: string; classN
           />
         </svg>
       );
+    case "kafka":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="3" fill="#231F20" className="dark:fill-white" />
+          <circle cx="19" cy="8" r="2.2" fill="#231F20" className="dark:fill-white" />
+          <circle cx="19" cy="16" r="2.2" fill="#231F20" className="dark:fill-white" />
+          <circle cx="5" cy="8" r="2.2" fill="#231F20" className="dark:fill-white" />
+          <circle cx="5" cy="16" r="2.2" fill="#231F20" className="dark:fill-white" />
+          <line x1="12" y1="12" x2="19" y2="8" stroke="currentColor" strokeWidth="1.8" />
+          <line x1="12" y1="12" x2="19" y2="16" stroke="currentColor" strokeWidth="1.8" />
+          <line x1="12" y1="12" x2="5" y2="8" stroke="currentColor" strokeWidth="1.8" />
+          <line x1="12" y1="12" x2="5" y2="16" stroke="currentColor" strokeWidth="1.8" />
+        </svg>
+      );
+    case "spark":
+    case "apache spark":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 2l2.4 6.6L21 11l-5.6 3.8L17.5 21 12 17.2 6.5 21l2.1-6.2L3 11l6.6-2.4L12 2z"
+            fill="#E25A1C"
+          />
+        </svg>
+      );
+    case "mysql":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <ellipse cx="12" cy="6" rx="8" ry="3" stroke="#00758F" strokeWidth="2" />
+          <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6" stroke="#F29111" strokeWidth="2" />
+          <path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" stroke="#00758F" strokeWidth="2" />
+        </svg>
+      );
+    case "docker":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <path
+            d="M2 13.5c0-1.1.9-2 2-2h15.2c.4-1.8 1.6-3.2 3.8-3.5 0 2.8-1.8 4.5-3 5.5-1.5 1.2-3.8 2-6.5 2H4c-1.1 0-2-.9-2-2z"
+            fill="#2496ED"
+          />
+          <rect x="5" y="7" width="2" height="2" fill="#2496ED" />
+          <rect x="8" y="7" width="2" height="2" fill="#2496ED" />
+          <rect x="11" y="7" width="2" height="2" fill="#2496ED" />
+          <rect x="8" y="4.5" width="2" height="2" fill="#2496ED" />
+          <rect x="11" y="4.5" width="2" height="2" fill="#2496ED" />
+        </svg>
+      );
+    case "linux":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C9.5 2 8 4 8 7c0 1.5.3 3 .8 4.2C7 12 5 14 5 17c0 3 2.5 5 7 5s7-2 7-5c0-3-2-5-3.8-5.8.5-1.2.8-2.7.8-4.2 0-3-1.5-5-4-5z" fill="#FCC624" />
+          <circle cx="10" cy="6.5" r="1" fill="#000" />
+          <circle cx="14" cy="6.5" r="1" fill="#000" />
+          <path d="M11 9h2l-1 2-1-2z" fill="#E95420" />
+        </svg>
+      );
+    case "matplotlib":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <circle cx="6" cy="16" r="3" fill="#11557C" />
+          <circle cx="12" cy="8" r="3" fill="#E24A33" />
+          <circle cx="18" cy="14" r="3" fill="#348ABD" />
+          <line x1="6" y1="16" x2="12" y2="8" stroke="#11557C" strokeWidth="2" />
+          <line x1="12" y1="8" x2="18" y2="14" stroke="#E24A33" strokeWidth="2" />
+        </svg>
+      );
+    case "etl/elt":
+    case "etl-elt":
+    case "data pipelines":
+    case "data-pipelines":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="6" height="6" rx="1" />
+          <rect x="16" y="3" width="6" height="6" rx="1" />
+          <rect x="9" y="15" width="6" height="6" rx="1" />
+          <path d="M5 9v3a2 2 0 002 2h5" />
+          <path d="M19 9v3a2 2 0 01-2 2h-5" />
+          <path d="M12 14v1" />
+        </svg>
+      );
     default:
       return (
         <div className="w-5 h-5 rounded-md bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold">
