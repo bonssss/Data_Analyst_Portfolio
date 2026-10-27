@@ -1,19 +1,19 @@
 export const profileData = {
   name: "Bonsa Desalegn",
   monogram: "BD",
-  role: "Data Analyst",
-  tagline: "I turn raw data into clear insights.",
+  role: "Data Analyst & Data Engineer",
+  tagline: "I build robust data pipelines and turn raw data into clear insights.",
   bioHero:
-    "I turn raw data into clear insights. I love exploring data, solving real-world problems, and building dashboards that help make better decisions.",
+    "I design reliable data pipelines and transform complex data into actionable insights. Combining software engineering rigor with modern analytics to build resilient data architectures and decision-ready dashboards.",
   aboutGreeting: "Hi, I'm Bonsa Desalegn",
   aboutIntro:
-    "I'm a data analyst with a strong foundation in statistics, data visualization, and business intelligence. I enjoy turning raw data into meaningful insights that help solve real problems and create value.",
+    "I'm a Data Analyst and Data Engineer with a solid Software Engineering foundation from Arba Minch University. I bridge the gap between backend data pipelines and executive business intelligence.",
   aboutExtended:
-    "With a background in Software Engineering from Arba Minch University, I bring a structured engineering mindset to analytics. From writing performant SQL queries and crafting automated data pipelines in Python, to translating ambiguous business questions into clear, intuitive Power BI dashboards, my goal is to bridge the gap between complex datasets and actionable stakeholder decisions.",
+    "With a background in Software Engineering from Arba Minch University, I bring deep system design and algorithmic discipline to the data ecosystem. From architecting normalized schemas, optimizing complex SQL queries, and automating Python ETL workflows, to delivering intuitive Power BI dashboards with DAX measures, I work across the full lifecycle of data — from ingestion to impact.",
   avatar: "/images/bonsa_portrait.png",
   location: "Addis Ababa, Ethiopia",
   education: "BSc in Software Engineering (Arba Minch University)",
-  status: "Learning & Growing in Data Analytics",
+  status: "Building Scalable Data Pipelines & BI Dashboards",
   cvUrl: "/documents/Bonsa_Desalegn_CV.pdf",
   socials: {
     github: {
@@ -35,6 +35,7 @@ export const profileData = {
   heroSkills: [
     { name: "Python", icon: "python", color: "#3776ab" },
     { name: "SQL", icon: "sql", color: "#00758f" },
+    { name: "PostgreSQL", icon: "postgresql", color: "#336791" },
     { name: "Power BI", icon: "powerbi", color: "#f2c811" },
     { name: "Excel", icon: "excel", color: "#217346" },
   ],

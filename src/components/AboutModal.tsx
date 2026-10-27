@@ -43,7 +43,7 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 About Bonsa Desalegn
               </h3>
               <p className="text-xs text-sky-600 dark:text-sky-400 font-medium">
-                Software Engineering Graduate &bull; Data Analyst
+                Software Engineering Graduate &bull; Data Analyst &amp; Data Engineer
               </p>
             </div>
           </div>

@@ -35,7 +35,7 @@ export function MonogramLogo({ className = "", showSubtitle = true }: MonogramLo
             Bonsa Desalegn
           </span>
           <span className="text-xs font-medium text-slate-500 dark:text-slate-400 tracking-wide">
-            Data Analyst
+            Data Analyst &amp; Engineer
           </span>
         </div>
       )}
