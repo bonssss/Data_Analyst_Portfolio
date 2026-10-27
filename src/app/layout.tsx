@@ -18,8 +18,12 @@ export const metadata: Metadata = {
   keywords: [
     "Bonsa Desalegn",
     "Data Analyst",
+    "Data Engineer",
+    "Data Engineering",
+    "ETL Pipeline",
     "Power BI",
     "SQL",
+    "PostgreSQL",
     "Python",
     "Excel",
     "Business Intelligence",

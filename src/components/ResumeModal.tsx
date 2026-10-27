@@ -68,7 +68,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               BONSA DESALEGN
             </h1>
             <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mt-0.5">
-              DATA ANALYST &bull; SOFTWARE ENGINEERING GRADUATE
+              DATA ANALYST &bull; DATA ENGINEERING &bull; SOFTWARE ENGINEERING GRADUATE
             </p>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400 mt-2">
               <span>📍 Addis Ababa, Ethiopia</span>
@@ -84,7 +84,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               Professional Summary
             </h2>
             <p className="leading-relaxed">
-              Analytical and detail-driven Data Analyst with a solid Software Engineering foundation from Arba Minch University. Skilled at transforming raw transactional databases into actionable executive dashboards and statistical insights using Python, SQL, Power BI, and Excel. Proven ability to bridge engineering precision with commercial impact.
+              Analytical and detail-driven Data Analyst with a solid Software Engineering foundation from Arba Minch University. Skilled at transforming raw transactional databases into actionable executive dashboards, automated ETL pipelines, and statistical insights using Python, SQL, PostgreSQL, Power BI, and Excel. Proven ability to bridge engineering precision with commercial impact.
             </p>
           </div>
 
