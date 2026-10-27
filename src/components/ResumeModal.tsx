@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { profileData } from "@/data/profile";
-import { X, Download, GraduationCap, Briefcase, Code, Award, ExternalLink } from "lucide-react";
+import { X, Download } from "lucide-react";
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -84,7 +84,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               Professional Summary
             </h2>
             <p className="leading-relaxed">
-              Analytical and detail-driven Data Analyst with a solid Software Engineering foundation from Arba Minch University. Skilled at transforming raw transactional databases into actionable executive dashboards, automated ETL pipelines, and statistical insights using Python, SQL, PostgreSQL, Power BI, and Excel. Proven ability to bridge engineering precision with commercial impact.
+              Analytical and detail-driven Data Analyst &amp; Data Engineer with a solid Software Engineering foundation. Skilled at transforming raw transactional databases into actionable executive dashboards, automated ETL pipelines, and statistical insights using Python, SQL, PostgreSQL, Power BI, and Excel. Proven ability to bridge engineering precision with commercial impact.
             </p>
           </div>
 
@@ -99,7 +99,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                   Bachelor of Science in Software Engineering
                 </h3>
                 <p className="text-slate-600 dark:text-slate-400">
-                  Arba Minch University &bull; Ethiopia
+                  Software Engineering Degree &bull; Addis Ababa, Ethiopia
                 </p>
               </div>
               <span className="text-slate-400 font-mono text-xs">Graduated</span>

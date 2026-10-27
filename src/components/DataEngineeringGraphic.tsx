@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Database, LineChart, Cpu, Layers, GitBranch, ArrowRight, Sparkles } from "lucide-react";
+import { Database, LineChart, Cpu } from "lucide-react";
 
 interface DataEngineeringGraphicProps {
   className?: string;

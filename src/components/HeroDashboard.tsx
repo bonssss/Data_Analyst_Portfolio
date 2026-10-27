@@ -1,12 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { TrendingUp, BarChart2, SlidersHorizontal, Maximize2, Sparkles } from "lucide-react";
+import {
+  TrendingUp,
+  BarChart2,
+  Database,
+  Cpu,
+  Layers,
+  Workflow,
+  SlidersHorizontal,
+  Maximize2,
+  CheckCircle2,
+  Zap,
+} from "lucide-react";
 import { AnimatedCounter } from "./reactbits/AnimatedCounter";
 
 export function HeroDashboard() {
+  const [activeTab, setActiveTab] = useState<"pipeline" | "analytics">("analytics");
   const [activeMonthIndex, setActiveMonthIndex] = useState<number>(9); // Default to Oct
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [activePipelineStage, setActivePipelineStage] = useState<number>(1);
 
   const months = [
     { name: "Jan", revenue: 68 },
@@ -29,6 +42,27 @@ export function HeroDashboard() {
     { name: "Home & Living", percent: 18, color: "#14b8a6" },
     { name: "Beauty", percent: 17, color: "#f59e0b" },
     { name: "Sports", percent: 12, color: "#6366f1" },
+  ];
+
+  const pipelineStages = [
+    {
+      title: "1. Data Ingestion",
+      tech: "PostgreSQL &bull; APIs",
+      stat: "24.8k events/s",
+      desc: "Automated CDC extraction from relational DBs & REST webhooks",
+    },
+    {
+      title: "2. ETL Pipeline",
+      tech: "Python &bull; Pandas",
+      stat: "Schema validated",
+      desc: "Automated cleaning, missingness imputation & deduplication",
+    },
+    {
+      title: "3. Star Schema Warehouse",
+      tech: "PostgreSQL &bull; dbt",
+      stat: "Fact & Dim Tables",
+      desc: "Optimized dimensional modeling for low-latency BI aggregations",
+    },
   ];
 
   // SVG coordinates calculation for line chart
@@ -63,28 +97,13 @@ export function HeroDashboard() {
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* Leaves */}
-          <path
-            d="M 50 85 C 20 60 10 20 35 10 C 50 30 52 60 50 85 Z"
-            fill="url(#leafGrad1)"
-          />
-          <path
-            d="M 50 85 C 70 55 90 25 70 12 C 55 25 52 65 50 85 Z"
-            fill="url(#leafGrad2)"
-          />
-          <path
-            d="M 50 85 C 40 40 45 10 60 5 C 65 25 58 60 50 85 Z"
-            fill="url(#leafGrad3)"
-          />
-          <path
-            d="M 50 85 C 10 70 5 45 20 40 C 35 50 45 70 50 85 Z"
-            fill="url(#leafGrad1)"
-          />
+          <path d="M 50 85 C 20 60 10 20 35 10 C 50 30 52 60 50 85 Z" fill="url(#leafGrad1)" />
+          <path d="M 50 85 C 70 55 90 25 70 12 C 55 25 52 65 50 85 Z" fill="url(#leafGrad2)" />
+          <path d="M 50 85 C 40 40 45 10 60 5 C 65 25 58 60 50 85 Z" fill="url(#leafGrad3)" />
+          <path d="M 50 85 C 10 70 5 45 20 40 C 35 50 45 70 50 85 Z" fill="url(#leafGrad1)" />
           {/* Ceramic Pot */}
           <ellipse cx="50" cy="85" rx="20" ry="4" fill="#cbd5e1" />
-          <path
-            d="M 32 85 L 36 122 C 36 126 64 126 64 122 L 68 85 Z"
-            fill="url(#potGrad)"
-          />
+          <path d="M 32 85 L 36 122 C 36 126 64 126 64 122 L 68 85 Z" fill="url(#potGrad)" />
           <ellipse cx="50" cy="122" rx="14" ry="2.5" fill="#94a3b8" />
 
           <defs>
@@ -120,298 +139,402 @@ export function HeroDashboard() {
 
           {/* Inner Dashboard Display */}
           <div className="relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-inner">
-            {/* Dashboard App Top Bar */}
-            <div className="flex items-center justify-between px-3.5 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70">
-              <div className="flex items-center gap-2">
-                <div className="p-1 rounded-md bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
-                  <BarChart2 className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-xs font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                  Analytics Overview
-                </span>
+            {/* Dashboard App Top Bar with Dual Switch: Analytics & Data Pipeline */}
+            <div className="flex items-center justify-between px-3.5 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80">
+              {/* Dual Tab Mode Switcher */}
+              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-slate-200/70 dark:bg-slate-800">
+                <button
+                  onClick={() => setActiveTab("analytics")}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                    activeTab === "analytics"
+                      ? "bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-2xs"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  <BarChart2 className="w-3 h-3" />
+                  <span>Analytics BI</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("pipeline")}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                    activeTab === "pipeline"
+                      ? "bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-2xs"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  <Workflow className="w-3 h-3 text-teal-500" />
+                  <span>Data Pipeline (ETL)</span>
+                </button>
               </div>
+
               <div className="flex items-center gap-2 text-slate-400">
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Live Stream
+                </span>
                 <SlidersHorizontal className="w-3 h-3 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" />
                 <Maximize2 className="w-3 h-3 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" />
               </div>
             </div>
 
-            {/* Dashboard Content */}
-            <div className="p-3 sm:p-4 space-y-3">
-              {/* Top 3 KPI Cards */}
-              <div className="grid grid-cols-3 gap-2">
-                {/* Metric 1 */}
-                <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                    Total Revenue
-                  </span>
-                  <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                    <AnimatedCounter value="$125,430" />
-                  </div>
-                  <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    <TrendingUp className="w-2.5 h-2.5" />
-                    <span>+12.5%</span>
-                  </div>
-                </div>
-
-                {/* Metric 2 */}
-                <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                    Total Orders
-                  </span>
-                  <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                    <AnimatedCounter value="2,842" />
-                  </div>
-                  <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    <TrendingUp className="w-2.5 h-2.5" />
-                    <span>+8.3%</span>
-                  </div>
-                </div>
-
-                {/* Metric 3 */}
-                <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                    Profit Margin
-                  </span>
-                  <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                    <AnimatedCounter value="18.6%" />
-                  </div>
-                  <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    <TrendingUp className="w-2.5 h-2.5" />
-                    <span>+4.2%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Row: Line Chart + Donut Chart */}
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-1">
-                {/* Monthly Revenue Line Chart (3 cols) */}
-                <div className="sm:col-span-3 p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
-                      Monthly Revenue
+            {/* View 1: Analytics Overview (matching design mockup) */}
+            {activeTab === "analytics" && (
+              <div className="p-3 sm:p-4 space-y-3 animate-in fade-in-50 duration-200">
+                {/* Top 3 KPI Cards */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Total Revenue
                     </span>
-                    <span className="text-[9px] font-mono font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/80 px-1.5 py-0.5 rounded">
-                      {months[activeMonthIndex].name}: ${months[activeMonthIndex].revenue}k
-                    </span>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
+                      <AnimatedCounter value="$125,430" />
+                    </div>
+                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      <TrendingUp className="w-2.5 h-2.5" />
+                      <span>+12.5%</span>
+                    </div>
                   </div>
 
-                  <div className="relative">
-                    <svg
-                      viewBox={`0 0 ${width} ${height}`}
-                      className="w-full h-24 overflow-visible"
-                    >
-                      <defs>
-                        <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#0284c7" stopOpacity="0.28" />
-                          <stop offset="100%" stopColor="#0284c7" stopOpacity="0.0" />
-                        </linearGradient>
-                      </defs>
+                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Total Orders
+                    </span>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
+                      <AnimatedCounter value="2,842" />
+                    </div>
+                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      <TrendingUp className="w-2.5 h-2.5" />
+                      <span>+8.3%</span>
+                    </div>
+                  </div>
 
-                      {/* Horizontal Grid lines */}
-                      {[30, 60, 90].map((y, idx) => (
-                        <line
-                          key={idx}
-                          x1="10"
-                          y1={y}
-                          x2={width - 10}
-                          y2={y}
-                          stroke="currentColor"
-                          className="text-slate-200 dark:text-slate-800"
-                          strokeDasharray="2 2"
-                        />
-                      ))}
+                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Profit Margin
+                    </span>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
+                      <AnimatedCounter value="18.6%" />
+                    </div>
+                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      <TrendingUp className="w-2.5 h-2.5" />
+                      <span>+4.2%</span>
+                    </div>
+                  </div>
+                </div>
 
-                      {/* Gradient fill below line */}
-                      <path d={areaPath} fill="url(#revenueGradient)" />
+                {/* Bottom Row: Line Chart + Donut Chart */}
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-1">
+                  {/* Monthly Revenue Line Chart */}
+                  <div className="sm:col-span-3 p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
+                        Monthly Revenue
+                      </span>
+                      <span className="text-[9px] font-mono font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/80 px-1.5 py-0.5 rounded">
+                        {months[activeMonthIndex].name}: ${months[activeMonthIndex].revenue}k
+                      </span>
+                    </div>
 
-                      {/* Main Trend Line */}
-                      <path
-                        d={linePath}
-                        fill="none"
-                        stroke="#0284c7"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                    <div className="relative">
+                      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-24 overflow-visible">
+                        <defs>
+                          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#0284c7" stopOpacity="0.28" />
+                            <stop offset="100%" stopColor="#0284c7" stopOpacity="0.0" />
+                          </linearGradient>
+                        </defs>
 
-                      {/* Interactive Data Dots */}
-                      {points.map((pt, idx) => {
-                        const isCurrent = activeMonthIndex === idx;
-                        return (
-                          <g
+                        {[30, 60, 90].map((y, idx) => (
+                          <line
                             key={idx}
-                            onMouseEnter={() => setActiveMonthIndex(idx)}
-                            className="cursor-pointer"
-                          >
-                            <circle
-                              cx={pt.x}
-                              cy={pt.y}
-                              r={isCurrent ? 4.5 : 2.5}
-                              className={`transition-all duration-150 ${
-                                isCurrent
-                                  ? "fill-sky-500 stroke-white dark:stroke-slate-900 stroke-2"
-                                  : "fill-white dark:fill-slate-900 stroke-sky-500 stroke-1.5"
-                              }`}
-                            />
-                          </g>
-                        );
-                      })}
-                    </svg>
+                            x1="10"
+                            y1={y}
+                            x2={width - 10}
+                            y2={y}
+                            stroke="currentColor"
+                            className="text-slate-200 dark:text-slate-800"
+                            strokeDasharray="2 2"
+                          />
+                        ))}
 
-                    {/* X-axis Month Labels */}
-                    <div className="flex justify-between text-[8px] font-mono text-slate-400 mt-1 px-1">
-                      {months.map((m, idx) => (
-                        <span
-                          key={idx}
-                          onClick={() => setActiveMonthIndex(idx)}
-                          className={`cursor-pointer transition-colors ${
-                            activeMonthIndex === idx
-                              ? "text-sky-600 dark:text-sky-400 font-bold"
-                              : "hover:text-slate-600 dark:hover:text-slate-300"
-                          }`}
-                        >
-                          {m.name}
-                        </span>
-                      ))}
+                        <path d={areaPath} fill="url(#revenueGradient)" />
+                        <path
+                          d={linePath}
+                          fill="none"
+                          stroke="#0284c7"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+
+                        {points.map((pt, idx) => {
+                          const isCurrent = activeMonthIndex === idx;
+                          return (
+                            <g
+                              key={idx}
+                              onMouseEnter={() => setActiveMonthIndex(idx)}
+                              className="cursor-pointer"
+                            >
+                              <circle
+                                cx={pt.x}
+                                cy={pt.y}
+                                r={isCurrent ? 4.5 : 2.5}
+                                className={`transition-all duration-150 ${
+                                  isCurrent
+                                    ? "fill-sky-500 stroke-white dark:stroke-slate-900 stroke-2"
+                                    : "fill-white dark:fill-slate-900 stroke-sky-500 stroke-1.5"
+                                }`}
+                              />
+                            </g>
+                          );
+                        })}
+                      </svg>
+
+                      <div className="flex justify-between text-[8px] font-mono text-slate-400 mt-1 px-1">
+                        {months.map((m, idx) => (
+                          <span
+                            key={idx}
+                            onClick={() => setActiveMonthIndex(idx)}
+                            className={`cursor-pointer transition-colors ${
+                              activeMonthIndex === idx
+                                ? "text-sky-600 dark:text-sky-400 font-bold"
+                                : "hover:text-slate-600 dark:hover:text-slate-300"
+                            }`}
+                          >
+                            {m.name}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Sales by Category Donut Chart (2 cols) */}
-                <div className="sm:col-span-2 p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
-                    Sales by Category
-                  </span>
+                  {/* Donut Chart */}
+                  <div className="sm:col-span-2 p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 flex flex-col justify-between">
+                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
+                      Sales by Category
+                    </span>
 
-                  <div className="flex items-center gap-2 my-auto">
-                    {/* Donut SVG */}
-                    <div className="relative w-16 h-16 shrink-0">
-                      <svg viewBox="0 0 40 40" className="w-full h-full -rotate-90">
-                        {/* Circle circumference = 2 * PI * 15.9155 ≈ 100 */}
-                        {/* Segment 1: Electronics 29% */}
-                        <circle
-                          cx="20"
-                          cy="20"
-                          r="15.915"
-                          fill="transparent"
-                          stroke="#0284c7"
-                          strokeWidth="6"
-                          strokeDasharray="29 71"
-                          strokeDashoffset="0"
-                          className="transition-opacity hover:opacity-80 cursor-pointer"
-                          onMouseEnter={() => setHoveredCategory("Electronics")}
-                          onMouseLeave={() => setHoveredCategory(null)}
-                        />
-                        {/* Segment 2: Clothing 24% */}
-                        <circle
-                          cx="20"
-                          cy="20"
-                          r="15.915"
-                          fill="transparent"
-                          stroke="#06b6d4"
-                          strokeWidth="6"
-                          strokeDasharray="24 76"
-                          strokeDashoffset="-29"
-                          className="transition-opacity hover:opacity-80 cursor-pointer"
-                          onMouseEnter={() => setHoveredCategory("Clothing")}
-                          onMouseLeave={() => setHoveredCategory(null)}
-                        />
-                        {/* Segment 3: Home & Living 18% */}
-                        <circle
-                          cx="20"
-                          cy="20"
-                          r="15.915"
-                          fill="transparent"
-                          stroke="#14b8a6"
-                          strokeWidth="6"
-                          strokeDasharray="18 82"
-                          strokeDashoffset="-53"
-                          className="transition-opacity hover:opacity-80 cursor-pointer"
-                          onMouseEnter={() => setHoveredCategory("Home & Living")}
-                          onMouseLeave={() => setHoveredCategory(null)}
-                        />
-                        {/* Segment 4: Beauty 17% */}
-                        <circle
-                          cx="20"
-                          cy="20"
-                          r="15.915"
-                          fill="transparent"
-                          stroke="#f59e0b"
-                          strokeWidth="6"
-                          strokeDasharray="17 83"
-                          strokeDashoffset="-71"
-                          className="transition-opacity hover:opacity-80 cursor-pointer"
-                          onMouseEnter={() => setHoveredCategory("Beauty")}
-                          onMouseLeave={() => setHoveredCategory(null)}
-                        />
-                        {/* Segment 5: Sports 12% */}
-                        <circle
-                          cx="20"
-                          cy="20"
-                          r="15.915"
-                          fill="transparent"
-                          stroke="#6366f1"
-                          strokeWidth="6"
-                          strokeDasharray="12 88"
-                          strokeDashoffset="-88"
-                          className="transition-opacity hover:opacity-80 cursor-pointer"
-                          onMouseEnter={() => setHoveredCategory("Sports")}
-                          onMouseLeave={() => setHoveredCategory(null)}
-                        />
-                      </svg>
-                    </div>
+                    <div className="flex items-center gap-2 my-auto">
+                      <div className="relative w-16 h-16 shrink-0">
+                        <svg viewBox="0 0 40 40" className="w-full h-full -rotate-90">
+                          <circle
+                            cx="20"
+                            cy="20"
+                            r="15.915"
+                            fill="transparent"
+                            stroke="#0284c7"
+                            strokeWidth="6"
+                            strokeDasharray="29 71"
+                            strokeDashoffset="0"
+                            className="transition-opacity hover:opacity-80 cursor-pointer"
+                            onMouseEnter={() => setHoveredCategory("Electronics")}
+                            onMouseLeave={() => setHoveredCategory(null)}
+                          />
+                          <circle
+                            cx="20"
+                            cy="20"
+                            r="15.915"
+                            fill="transparent"
+                            stroke="#06b6d4"
+                            strokeWidth="6"
+                            strokeDasharray="24 76"
+                            strokeDashoffset="-29"
+                            className="transition-opacity hover:opacity-80 cursor-pointer"
+                            onMouseEnter={() => setHoveredCategory("Clothing")}
+                            onMouseLeave={() => setHoveredCategory(null)}
+                          />
+                          <circle
+                            cx="20"
+                            cy="20"
+                            r="15.915"
+                            fill="transparent"
+                            stroke="#14b8a6"
+                            strokeWidth="6"
+                            strokeDasharray="18 82"
+                            strokeDashoffset="-53"
+                            className="transition-opacity hover:opacity-80 cursor-pointer"
+                            onMouseEnter={() => setHoveredCategory("Home & Living")}
+                            onMouseLeave={() => setHoveredCategory(null)}
+                          />
+                          <circle
+                            cx="20"
+                            cy="20"
+                            r="15.915"
+                            fill="transparent"
+                            stroke="#f59e0b"
+                            strokeWidth="6"
+                            strokeDasharray="17 83"
+                            strokeDashoffset="-71"
+                            className="transition-opacity hover:opacity-80 cursor-pointer"
+                            onMouseEnter={() => setHoveredCategory("Beauty")}
+                            onMouseLeave={() => setHoveredCategory(null)}
+                          />
+                          <circle
+                            cx="20"
+                            cy="20"
+                            r="15.915"
+                            fill="transparent"
+                            stroke="#6366f1"
+                            strokeWidth="6"
+                            strokeDasharray="12 88"
+                            strokeDashoffset="-88"
+                            className="transition-opacity hover:opacity-80 cursor-pointer"
+                            onMouseEnter={() => setHoveredCategory("Sports")}
+                            onMouseLeave={() => setHoveredCategory(null)}
+                          />
+                        </svg>
+                      </div>
 
-                    {/* Legend */}
-                    <div className="flex flex-col gap-0.5 text-[9px] w-full">
-                      {categories.map((c) => (
-                        <div
-                          key={c.name}
-                          className={`flex items-center justify-between transition-colors ${
-                            hoveredCategory === c.name ? "font-bold text-sky-600" : "text-slate-600 dark:text-slate-400"
-                          }`}
-                        >
-                          <div className="flex items-center gap-1 truncate">
-                            <span
-                              className="w-1.5 h-1.5 rounded-full shrink-0"
-                              style={{ backgroundColor: c.color }}
-                            />
-                            <span className="truncate">{c.name}</span>
+                      <div className="flex flex-col gap-0.5 text-[9px] w-full">
+                        {categories.map((c) => (
+                          <div
+                            key={c.name}
+                            className={`flex items-center justify-between transition-colors ${
+                              hoveredCategory === c.name
+                                ? "font-bold text-sky-600"
+                                : "text-slate-600 dark:text-slate-400"
+                            }`}
+                          >
+                            <div className="flex items-center gap-1 truncate">
+                              <span
+                                className="w-1.5 h-1.5 rounded-full shrink-0"
+                                style={{ backgroundColor: c.color }}
+                              />
+                              <span className="truncate">{c.name}</span>
+                            </div>
+                            <span className="font-mono text-slate-700 dark:text-slate-300 ml-1">
+                              {c.percent}%
+                            </span>
                           </div>
-                          <span className="font-mono text-slate-700 dark:text-slate-300 ml-1">
-                            {c.percent}%
-                          </span>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* View 2: Data Pipeline & Data Engineering Architecture */}
+            {activeTab === "pipeline" && (
+              <div className="p-3 sm:p-4 space-y-3 animate-in fade-in-50 duration-200">
+                {/* Data Pipeline KPI Cards */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Daily Throughput
+                    </span>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
+                      <AnimatedCounter value="1.2M rows" />
+                    </div>
+                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      <Zap className="w-2.5 h-2.5" />
+                      <span>Active DAG</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Query Latency
+                    </span>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
+                      <AnimatedCounter value="42ms" />
+                    </div>
+                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-teal-600 dark:text-teal-400 mt-0.5">
+                      <span>Indexed &bull; CTE</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Pipeline Reliability
+                    </span>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
+                      <AnimatedCounter value="99.98%" />
+                    </div>
+                    <div className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      <CheckCircle2 className="w-2.5 h-2.5" />
+                      <span>Zero Loss</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pipeline Flowchart Visual */}
+                <div className="p-2.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
+                      End-to-End Data Pipeline Flow
+                    </span>
+                    <span className="text-[9px] font-mono text-teal-600 dark:text-teal-400">
+                      Automated &bull; Airflow &bull; Python
+                    </span>
+                  </div>
+
+                  {/* 3 Step Pipeline Nodes */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {pipelineStages.map((stage, idx) => {
+                      const isActive = activePipelineStage === idx;
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => setActivePipelineStage(idx)}
+                          className={`p-2 rounded-lg border cursor-pointer transition-all ${
+                            isActive
+                              ? "bg-teal-50 dark:bg-teal-950/70 border-teal-400 shadow-2xs"
+                              : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] font-bold text-slate-900 dark:text-white">
+                              {stage.title}
+                            </span>
+                            {idx === 0 ? (
+                              <Database className="w-3 h-3 text-sky-500" />
+                            ) : idx === 1 ? (
+                              <Cpu className="w-3 h-3 text-teal-500" />
+                            ) : (
+                              <Layers className="w-3 h-3 text-indigo-500" />
+                            )}
+                          </div>
+                          <span
+                            className="block text-[8px] font-mono text-teal-700 dark:text-teal-300 font-semibold"
+                            dangerouslySetInnerHTML={{ __html: stage.tech }}
+                          />
+                          <p className="text-[8px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                            {stage.desc}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Connecting Stream Bar */}
+                  <div className="relative h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
+                    <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-sky-500 via-teal-400 to-emerald-400 rounded-full animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Laptop Keyboard Base & Hinge */}
         <div className="relative">
-          {/* Base bottom slab */}
           <div className="h-3 sm:h-3.5 bg-gradient-to-b from-slate-300 via-slate-400 to-slate-500 dark:from-slate-700 dark:via-slate-800 dark:to-slate-900 rounded-b-xl shadow-xl flex items-center justify-center">
-            {/* Trackpad notch indent */}
             <div className="w-16 h-1 rounded-b bg-slate-400/80 dark:bg-slate-700" />
           </div>
-          {/* Bottom shelf shadow */}
           <div className="w-[96%] mx-auto h-2 bg-slate-400/30 dark:bg-slate-950/60 blur-xs rounded-full" />
         </div>
       </div>
 
-      {/* Handwritten Annotation Underneath: "Data → Insights → Impact" with custom drawn arrow */}
+      {/* Handwritten Annotation Underneath: "Data Engineering → Insights → Impact" */}
       <div className="mt-4 sm:mt-5 flex flex-col items-center sm:items-end sm:pr-8">
         <div className="relative inline-flex flex-col items-center">
           <span className="font-handwriting text-xl sm:text-2xl font-bold tracking-wide text-teal-600 dark:text-teal-400 rotate-[-2deg]">
-            Data → Insights → Impact
+            Data Pipelines → Insights → Impact
           </span>
-          {/* Handwritten curved underline and arrow */}
           <svg
-            className="w-36 sm:w-44 h-6 text-teal-500/80 dark:text-teal-400/80 -mt-1 overflow-visible"
+            className="w-40 sm:w-48 h-6 text-teal-500/80 dark:text-teal-400/80 -mt-1 overflow-visible"
             viewBox="0 0 160 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -422,7 +545,6 @@ export function HeroDashboard() {
               strokeWidth="2"
               strokeLinecap="round"
             />
-            {/* Arrowhead */}
             <path
               d="M 140 3 L 152 7 L 143 12"
               stroke="currentColor"

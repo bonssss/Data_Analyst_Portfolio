@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { profileData } from "@/data/profile";
 import { DataEngineeringGraphic } from "./DataEngineeringGraphic";
-import { X, GraduationCap, MapPin, TrendingUp, CheckCircle2, Award, BookOpen, Compass } from "lucide-react";
+import { X, GraduationCap, CheckCircle2, Compass } from "lucide-react";
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -43,7 +43,7 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 About Bonsa Desalegn
               </h3>
               <p className="text-xs text-sky-600 dark:text-sky-400 font-medium">
-                Software Engineering Graduate &bull; Data Analyst
+                Software Engineering Graduate &bull; Data Analyst &amp; Data Engineer
               </p>
             </div>
           </div>
@@ -65,7 +65,7 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
               <span>Software Engineering Foundation</span>
             </h4>
             <p>
-              I graduated with a <strong>BSc in Software Engineering from Arba Minch University</strong>. This academic training provided me with strong computer science principles, database modeling skills, object-oriented programming, and computational thinking.
+              I hold a <strong>BSc in Software Engineering</strong>. This academic training provided me with strong computer science principles, database modeling skills, object-oriented programming, and computational thinking.
             </p>
             <p>
               Rather than viewing data in isolation, my engineering background allows me to understand full data architectures — from how data is created at the application layer to relational normalization, ETL pipelines, and executive dashboards.

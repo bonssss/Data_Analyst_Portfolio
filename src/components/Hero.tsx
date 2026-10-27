@@ -1,12 +1,10 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { profileData } from "@/data/profile";
 import { HeroDashboard } from "./HeroDashboard";
-import { ArrowRight, Mail, Database, BarChart3, FileSpreadsheet, Code2 } from "lucide-react";
+import { ArrowRight, Mail, Database, BarChart3, FileSpreadsheet, Code2, Workflow } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./SocialIcons";
-import { ShinyText } from "./reactbits/ShinyText";
 
 export function Hero() {
   const getToolIcon = (name: string) => {
@@ -15,6 +13,10 @@ export function Hero() {
         return <Code2 className="w-3.5 h-3.5 text-blue-500" />;
       case "SQL":
         return <Database className="w-3.5 h-3.5 text-sky-600" />;
+      case "PostgreSQL":
+        return <Database className="w-3.5 h-3.5 text-indigo-500" />;
+      case "ETL Pipelines":
+        return <Workflow className="w-3.5 h-3.5 text-teal-500" />;
       case "Power BI":
         return <BarChart3 className="w-3.5 h-3.5 text-amber-500" />;
       case "Excel":
@@ -51,8 +53,8 @@ export function Hero() {
             </h1>
 
             {/* Highlighted Role Title in Electric Cyan/Teal */}
-            <div className="text-3xl sm:text-4xl xl:text-5xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-sky-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
-              Data Analyst
+            <div className="text-2xl sm:text-3xl xl:text-4xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-sky-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+              Data Analyst &amp; Data Engineer
             </div>
 
             {/* Supporting Text */}

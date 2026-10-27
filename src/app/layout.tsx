@@ -12,9 +12,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bonsadesalegn.dev"),
-  title: "Bonsa Desalegn — Data Analyst Portfolio",
+  title: "Bonsa Desalegn — Data Analyst & Data Engineer Portfolio",
   description:
-    "Data Analytics Portfolio of Bonsa Desalegn. Exploring real-world datasets, uncovering actionable trends, and building high-impact dashboards using Python, SQL, Power BI, and Excel.",
+    "Data Analytics & Data Engineering Portfolio of Bonsa Desalegn. Building resilient ETL pipelines, optimizing relational databases, and turning raw data into high-impact dashboards using Python, SQL, PostgreSQL, Power BI, and Excel.",
   keywords: [
     "Bonsa Desalegn",
     "Data Analyst",
@@ -37,23 +37,23 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://bonsadesalegn.dev",
-    title: "Bonsa Desalegn — Data Analyst Portfolio",
+    title: "Bonsa Desalegn — Data Analyst & Data Engineer Portfolio",
     description:
-      "I turn raw data into clear insights. Explore data analysis case studies, Power BI dashboards, and Python pipelines.",
+      "I design reliable data pipelines and turn raw data into clear business insights. Explore data engineering workflows, ETL pipelines, and Power BI dashboards.",
     siteName: "Bonsa Desalegn Portfolio",
     images: [
       {
         url: "/images/hero_laptop.png",
         width: 1200,
         height: 630,
-        alt: "Bonsa Desalegn - Data Analytics Portfolio",
+        alt: "Bonsa Desalegn - Data Analytics & Engineering Portfolio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bonsa Desalegn — Data Analyst",
-    description: "Turning raw data into clear business insights and interactive dashboards.",
+    title: "Bonsa Desalegn — Data Analyst & Data Engineer",
+    description: "Building resilient data pipelines and turning raw data into executive dashboards.",
   },
 };
 
