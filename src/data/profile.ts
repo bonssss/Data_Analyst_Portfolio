@@ -40,9 +40,11 @@ export const profileData = {
   ],
   interests: [
     "Exploratory Data Analysis",
+    "Data Engineering & ETL Pipelines",
     "Business Intelligence & Reporting",
+    "Relational & Dimensional Modeling (Star Schema)",
     "Customer & Product Analytics",
-    "Predictive Modeling & Statistical Inference",
-    "Data Storytelling",
+    "Statistical Inference & Hypothesis Testing",
+    "Executive Data Storytelling",
   ],
 };
